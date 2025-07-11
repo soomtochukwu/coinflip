@@ -15,38 +15,14 @@ interface GameInterfaceProps {
 }
 
 const assetsByNetwork = {
-  ethereum: [
-    { symbol: "ETH", name: "Ethereum", balance: "2.45", icon: "Ξ", min: 0.001, max: 10 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-    { symbol: "USDT", name: "Tether", balance: "890.50", icon: "💰", min: 1, max: 5000 },
-    { symbol: "DAI", name: "Dai", balance: "500.00", icon: "🏛️", min: 1, max: 2000 },
+
+  lisk: [
+    { symbol: "LSK", name: "LSK", balance: "15.80", icon: "🛆", min: 0.01, max: 50 },
+    { symbol: "ETH", name: "ETHER", balance: "890.50", icon: "💰", min: 1, max: 5000 },
   ],
-  polygon: [
-    { symbol: "MATIC", name: "Polygon", balance: "850.00", icon: "🔷", min: 1, max: 1000 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-    { symbol: "USDT", name: "Tether", balance: "890.50", icon: "💰", min: 1, max: 5000 },
-  ],
-  arbitrum: [
-    { symbol: "ETH", name: "Ethereum", balance: "2.45", icon: "Ξ", min: 0.001, max: 10 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-    { symbol: "ARB", name: "Arbitrum", balance: "450.00", icon: "🔵", min: 1, max: 1000 },
-  ],
-  optimism: [
-    { symbol: "ETH", name: "Ethereum", balance: "2.45", icon: "Ξ", min: 0.001, max: 10 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-    { symbol: "OP", name: "Optimism", balance: "320.50", icon: "🔴", min: 1, max: 500 },
-  ],
-  base: [
-    { symbol: "ETH", name: "Ethereum", balance: "2.45", icon: "Ξ", min: 0.001, max: 10 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-  ],
-  bsc: [
-    { symbol: "BNB", name: "BNB", balance: "15.80", icon: "🟡", min: 0.01, max: 50 },
-    { symbol: "USDT", name: "Tether", balance: "890.50", icon: "💰", min: 1, max: 5000 },
-  ],
-  avalanche: [
-    { symbol: "AVAX", name: "Avalanche", balance: "45.20", icon: "🔺", min: 0.1, max: 100 },
-    { symbol: "USDC", name: "USD Coin", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
+  celo: [
+    { symbol: "CELO", name: "Celo Coin", balance: "45.20", icon: "🟡", min: 0.1, max: 100 },
+    { symbol: "cUSD", name: "Celo Dollar", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
   ],
 }
 
@@ -59,7 +35,7 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
   const [gameResult, setGameResult] = useState<"win" | "lose" | null>(null)
   const [coinRotation, setCoinRotation] = useState(0)
 
-  const currentAssets = assetsByNetwork[selectedNetwork as keyof typeof assetsByNetwork] || assetsByNetwork.ethereum
+  const currentAssets = assetsByNetwork[selectedNetwork as keyof typeof assetsByNetwork] || assetsByNetwork.celo
   const selectedAssetData = currentAssets.find((asset) => asset.symbol === selectedAsset) || currentAssets[0]
 
   const flipCoin = async () => {
@@ -130,11 +106,10 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
           <Button
             variant={selectedSide === "heads" ? "default" : "outline"}
             onClick={() => setSelectedSide("heads")}
-            className={`h-12 text-sm font-semibold transition-all ${
-              selectedSide === "heads"
+            className={`h-12 text-sm font-semibold transition-all ${selectedSide === "heads"
                 ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
                 : "border-gold text-gold hover:bg-gold/10"
-            }`}
+              }`}
             disabled={isFlipping}
           >
             👑 HEADS
@@ -142,11 +117,10 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
           <Button
             variant={selectedSide === "tails" ? "default" : "outline"}
             onClick={() => setSelectedSide("tails")}
-            className={`h-12 text-sm font-semibold transition-all ${
-              selectedSide === "tails"
+            className={`h-12 text-sm font-semibold transition-all ${selectedSide === "tails"
                 ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
                 : "border-gold text-gold hover:bg-gold/10"
-            }`}
+              }`}
             disabled={isFlipping}
           >
             💰 TAILS
@@ -266,11 +240,10 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
         {/* Game Result - Compact */}
         {gameResult && (
           <div
-            className={`p-3 rounded-lg text-center font-bold text-sm border-2 ${
-              gameResult === "win"
+            className={`p-3 rounded-lg text-center font-bold text-sm border-2 ${gameResult === "win"
                 ? "bg-green-500/20 text-green-500 border-green-500/30"
                 : "bg-red-500/20 text-red-500 border-red-500/30"
-            }`}
+              }`}
           >
             {gameResult === "win" ? "🎉 GOLDEN WIN! 🎉" : "😔 Try Again"}
             <div className="text-xs mt-1 opacity-80">

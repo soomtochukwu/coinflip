@@ -21,22 +21,13 @@ interface HeaderProps {
 }
 
 const networks = [
-  { id: "ethereum", name: "Ethereum", color: "text-blue-500", symbol: "ETH", chainId: 1 },
-  { id: "polygon", name: "Polygon", color: "text-purple-500", symbol: "MATIC", chainId: 137 },
-  { id: "arbitrum", name: "Arbitrum", color: "text-cyan-500", symbol: "ETH", chainId: 42161 },
-  { id: "optimism", name: "Optimism", color: "text-red-500", symbol: "ETH", chainId: 10 },
-  { id: "base", name: "Base", color: "text-blue-600", symbol: "ETH", chainId: 8453 },
-  { id: "bsc", name: "BSC", color: "text-yellow-500", symbol: "BNB", chainId: 56 },
-  { id: "avalanche", name: "Avalanche", color: "text-red-600", symbol: "AVAX", chainId: 43114 },
+  { id: "celo", name: "CELO", color: "text-yellow-600", symbol: "CELO", chainId: 42220 },
+  { id: "lisk", name: "LISK", color: "text-gray-500", symbol: "LSK", chainId: 1135 },
 ]
 
 const walletOptions = [
   { name: "MetaMask", icon: "🦊" },
-  { name: "WalletConnect", icon: "🔗" },
-  { name: "Coinbase Wallet", icon: "🔵" },
-  { name: "Trust Wallet", icon: "🛡️" },
-  { name: "Rainbow", icon: "🌈" },
-  { name: "Phantom", icon: "👻" },
+  { name: "OKX", icon: "⛌" },
 ]
 
 export function Header({
@@ -100,11 +91,10 @@ export function Header({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${
-                      activeTab === tab.id
-                        ? "bg-gold/20 text-gold border border-gold shadow-lg shadow-gold/20"
-                        : "text-muted-foreground hover:text-gold hover:bg-muted/50"
-                    }`}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all ${activeTab === tab.id
+                      ? "bg-gold/20 text-gold border border-gold shadow-lg shadow-gold/20"
+                      : "text-muted-foreground hover:text-gold hover:bg-muted/50"
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{tab.label}</span>
@@ -202,11 +192,10 @@ export function Header({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-lg whitespace-nowrap transition-all ${
-                  activeTab === tab.id
-                    ? "bg-gold/20 text-gold border border-gold"
-                    : "text-muted-foreground hover:text-gold hover:bg-muted/50"
-                }`}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg whitespace-nowrap transition-all ${activeTab === tab.id
+                  ? "bg-gold/20 text-gold border border-gold"
+                  : "text-muted-foreground hover:text-gold hover:bg-muted/50"
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
