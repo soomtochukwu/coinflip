@@ -8,13 +8,13 @@ export function StatsPanel() {
     {
       id: 1,
       player: "0x1234...5678",
-      bet: "0.5 ETH",
+      bet: "0.5 cUSD",
       result: "WIN",
-      payout: "0.975 ETH",
+      payout: "0.975 cUSD",
       side: "heads",
-      network: "Ethereum",
+      network: "Celo",
     },
-    { id: 2, player: "0x8765...4321", bet: "1.2 USDC", result: "LOSE", payout: "0", side: "tails", network: "Polygon" },
+    { id: 2, player: "0x8765...4321", bet: "1.2 LSK", result: "LOSE", payout: "0", side: "tails", network: "Lisk" },
     {
       id: 3,
       player: "0x9876...1234",
@@ -22,17 +22,17 @@ export function StatsPanel() {
       result: "WIN",
       payout: "0.195 ETH",
       side: "heads",
-      network: "Arbitrum",
+      network: "Lisk",
     },
-    { id: 4, player: "0x4567...8901", bet: "2.0 USDT", result: "LOSE", payout: "0", side: "tails", network: "BSC" },
+    { id: 4, player: "0x4567...8901", bet: "2.0 ETH", result: "LOSE", payout: "0", side: "tails", network: "Celo" },
     {
       id: 5,
       player: "0x2345...6789",
-      bet: "0.8 ETH",
+      bet: "0.8 LSK",
       result: "WIN",
-      payout: "1.56 ETH",
+      payout: "1.56 LSK",
       side: "tails",
-      network: "Base",
+      network: "Lisk",
     },
   ]
 
@@ -40,17 +40,12 @@ export function StatsPanel() {
     { label: "Total Volume", value: "1,234.5 ETH", icon: Coins, color: "text-gold" },
     { label: "Active Players", value: "2,847", icon: Users, color: "text-green-500" },
     { label: "Games Played", value: "45,123", icon: Zap, color: "text-gold" },
-    { label: "Networks", value: "7 Chains", icon: Globe, color: "text-green-500" },
+    { label: "Networks", value: "2 Chains", icon: Globe, color: "text-green-500" },
   ]
 
   const networkColors = {
-    Ethereum: "text-blue-500",
-    Polygon: "text-purple-500",
-    Arbitrum: "text-cyan-500",
-    BSC: "text-yellow-500",
-    Base: "text-blue-600",
-    Optimism: "text-red-500",
-    Avalanche: "text-red-600",
+    Lisk: "text-gray-500",
+    Celo: "text-yellow-500",
   }
 
   return (
@@ -94,9 +89,8 @@ export function StatsPanel() {
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-muted-foreground font-mono">{game.player}</span>
                   <span
-                    className={`text-xs font-semibold px-1 py-0.5 rounded ${
-                      game.result === "WIN" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500"
-                    }`}
+                    className={`text-xs font-semibold px-1 py-0.5 rounded ${game.result === "WIN" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500"
+                      }`}
                   >
                     {game.result}
                   </span>
@@ -126,29 +120,14 @@ export function StatsPanel() {
         <CardContent className="pt-0">
           <div className="grid grid-cols-2 gap-1 text-xs">
             <div className="flex items-center space-x-1">
-              <span className="text-blue-500">●</span>
-              <span className="text-foreground">Ethereum</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-purple-500">●</span>
-              <span className="text-foreground">Polygon</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-cyan-500">●</span>
-              <span className="text-foreground">Arbitrum</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-red-500">●</span>
-              <span className="text-foreground">Optimism</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-blue-600">●</span>
-              <span className="text-foreground">Base</span>
+              <span className="text-gray-500">●</span>
+              <span className="text-foreground">Lisk</span>
             </div>
             <div className="flex items-center space-x-1">
               <span className="text-yellow-500">●</span>
-              <span className="text-foreground">BSC</span>
+              <span className="text-foreground">Celo</span>
             </div>
+
           </div>
         </CardContent>
       </Card>

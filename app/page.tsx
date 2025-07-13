@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { GameInterface } from "@/components/game-interface"
 import { StatsPanel } from "@/components/stats-panel"
@@ -9,15 +9,31 @@ import { GameHistory } from "@/components/game-history"
 import { Leaderboard } from "@/components/leaderboard"
 import { CommentsSidebar } from "@/components/comments-sidebar"
 import { ThemeProvider } from "@/components/theme-provider"
+import { useAccount, useBalance } from "wagmi"
+import { useChainId } from 'wagmi'
+
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("game")
-  const [isWalletConnected, setIsWalletConnected] = useState(false)
-  const [selectedNetwork, setSelectedNetwork] = useState("ethereum")
-  const [balance, setBalance] = useState("0.00")
-  const [walletAddress, setWalletAddress] = useState("")
-  const [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = useState(false)
+  const
+    // 
+    [activeTab, setActiveTab] = useState("game")
+    , [isWalletConnected, setIsWalletConnected] = useState(false)
+    , [selectedNetwork, setSelectedNetwork] = useState("lisk")
+    , [chainID, setChainID] = useState<number>()
+    , { address } = useAccount()
+    , _balance = useBalance({
+      address: address,
+      chainId: chainID,
+      token: undefined,
+    }).data?.formatted
+    , [balance, setBalance] = useState(String(Number(_balance).toFixed(5)))
+    , [walletAddress, setWalletAddress] = useState("")
+    , [isCommentsSidebarOpen, setIsCommentsSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    // @ts-ignore
+    console.table(_balance, selectedNetwork, chainID)
+  }, [selectedNetwork, chainID])
   return (
     <ThemeProvider defaultTheme="dark" storageKey="golden-flip-theme">
       <div className="h-screen bg-gradient-to-br from-background via-muted/20 to-background text-foreground relative overflow-hidden transition-colors duration-300 flex flex-col">
@@ -37,6 +53,7 @@ export default function Home() {
             setIsWalletConnected={setIsWalletConnected}
             selectedNetwork={selectedNetwork}
             setSelectedNetwork={setSelectedNetwork}
+            setChainID={setChainID}
             balance={balance}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -49,7 +66,7 @@ export default function Home() {
             {activeTab === "game" && (
               <>
                 <div className="text-center mb-6">
-                  <h1 className="text-3xl md:text-5xl font-bold mb-2 text-gold-gradient">GOLDEN FLIP</h1>
+                  <h1 className="text-3xl md:text-5xl font-bold mb-2 text-gold-gradient">HEADS UP</h1>
                   <p className="text-sm md:text-lg text-muted-foreground mb-1">Where Fortune Favors the Bold</p>
                   <p className="text-sm text-gold font-semibold">Double Your Crypto • Provably Fair • Multi-Chain</p>
                 </div>

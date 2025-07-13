@@ -14,70 +14,72 @@ interface GameInterfaceProps {
   setBalance: (balance: string) => void
 }
 
-const assetsByNetwork = {
-
-  lisk: [
-    { symbol: "LSK", name: "LSK", balance: "15.80", icon: "🛆", min: 0.01, max: 50 },
-    { symbol: "ETH", name: "ETHER", balance: "890.50", icon: "💰", min: 1, max: 5000 },
-  ],
-  celo: [
-    { symbol: "CELO", name: "Celo Coin", balance: "45.20", icon: "🟡", min: 0.1, max: 100 },
-    { symbol: "cUSD", name: "Celo Dollar", balance: "1,250.00", icon: "💵", min: 1, max: 5000 },
-  ],
-}
-
 export function GameInterface({ isWalletConnected, selectedNetwork, balance, setBalance }: GameInterfaceProps) {
-  const [selectedSide, setSelectedSide] = useState<"heads" | "tails" | null>(null)
-  const [betAmount, setBetAmount] = useState(0.1)
-  const [selectedAsset, setSelectedAsset] = useState("ETH")
-  const [isFlipping, setIsFlipping] = useState(false)
-  const [lastResult, setLastResult] = useState<"heads" | "tails" | null>(null)
-  const [gameResult, setGameResult] = useState<"win" | "lose" | null>(null)
-  const [coinRotation, setCoinRotation] = useState(0)
+  const
+    // 
+    [selectedSide, setSelectedSide] = useState<"heads" | "tails" | null>(null)
+    , [betAmount, setBetAmount] = useState(0.1)
+    , [selectedAsset, setSelectedAsset] = useState("ETH")
+    , [isFlipping, setIsFlipping] = useState(false)
+    , [lastResult, setLastResult] = useState<"heads" | "tails" | null>(null)
+    , [gameResult, setGameResult] = useState<"win" | "lose" | null>(null)
+    , [coinRotation, setCoinRotation] = useState(0)
 
-  const currentAssets = assetsByNetwork[selectedNetwork as keyof typeof assetsByNetwork] || assetsByNetwork.celo
-  const selectedAssetData = currentAssets.find((asset) => asset.symbol === selectedAsset) || currentAssets[0]
+    , assetsByNetwork = {
 
-  const flipCoin = async () => {
-    if (!isWalletConnected || !selectedSide || isFlipping) return
+      Lisk: [
+        // { symbol: "LSK", name: "LSK", balance: balance, icon: "🛆", min: 0.01, max: 50 },
+        { symbol: "ETH", name: "ETHER", balance: balance, icon: "💰", min: 1, max: 5000 },
+      ],
+      Celo: [
+        { symbol: "CELO", name: "Celo Coin", balance: balance, icon: "🟡", min: 0.1, max: 100 },
+        // { symbol: "cUSD", name: "Celo Dollar", balance: balance, icon: "💵", min: 1, max: 5000 },
+      ],
+    }
 
-    setIsFlipping(true)
-    setGameResult(null)
+    , currentAssets = assetsByNetwork[selectedNetwork as keyof typeof assetsByNetwork] || assetsByNetwork.Celo
+    , selectedAssetData = currentAssets.find((asset) => asset.symbol === selectedAsset) || currentAssets[0]
 
-    // Animate coin flip
-    const flipDuration = 2000
-    const rotations = 10 + Math.random() * 10
-    setCoinRotation((prev) => prev + rotations * 180)
+    , flipCoin = async () => {
+      if (!isWalletConnected || !selectedSide || isFlipping) return
 
-    setTimeout(() => {
-      const result = Math.random() < 0.5 ? "heads" : "tails"
-      setLastResult(result)
+      setIsFlipping(true)
+      setGameResult(null)
 
-      const won = result === selectedSide
-      setGameResult(won ? "win" : "lose")
+      // Animate coin flip
+      const flipDuration = 2000
+      const rotations = 10 + Math.random() * 10
+      setCoinRotation((prev) => prev + rotations * 180)
 
-      if (won) {
-        const currentBalance = Number.parseFloat(balance)
-        setBalance((currentBalance + betAmount * 0.95).toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2))
-      } else {
-        const currentBalance = Number.parseFloat(balance)
-        setBalance(Math.max(0, currentBalance - betAmount).toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2))
-      }
+      setTimeout(() => {
+        const result = Math.random() < 0.5 ? "heads" : "tails"
+        setLastResult(result)
 
-      setIsFlipping(false)
-    }, flipDuration)
-  }
+        const won = result === selectedSide
+        setGameResult(won ? "win" : "lose")
 
-  const adjustBetAmount = (increment: boolean) => {
-    const step = selectedAssetData.symbol === "ETH" ? 0.001 : selectedAssetData.symbol.includes("USD") ? 1 : 0.1
-    const newAmount = increment ? betAmount + step : betAmount - step
-    const clampedAmount = Math.max(selectedAssetData.min, Math.min(selectedAssetData.max, newAmount))
-    setBetAmount(Number(clampedAmount.toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2)))
-  }
+        if (won) {
+          const currentBalance = Number.parseFloat(balance)
+          setBalance((currentBalance + betAmount * 0.95).toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2))
+        } else {
+          const currentBalance = Number.parseFloat(balance)
+          setBalance(Math.max(0, currentBalance - betAmount).toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2))
+        }
 
-  const handleSliderChange = (value: number[]) => {
-    setBetAmount(value[0])
-  }
+        setIsFlipping(false)
+      }, flipDuration)
+    }
+
+    , adjustBetAmount = (increment: boolean) => {
+      const step = selectedAssetData.symbol === "ETH" ? 0.001 : selectedAssetData.symbol.includes("USD") ? 1 : 0.1
+      const newAmount = increment ? betAmount + step : betAmount - step
+      const clampedAmount = Math.max(selectedAssetData.min, Math.min(selectedAssetData.max, newAmount))
+      setBetAmount(Number(clampedAmount.toFixed(selectedAssetData.symbol === "ETH" ? 3 : 2)))
+    }
+
+    , handleSliderChange = (value: number[]) => {
+      setBetAmount(value[0])
+    };
 
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-gold shadow-2xl shadow-gold/10 h-full">
@@ -107,8 +109,8 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
             variant={selectedSide === "heads" ? "default" : "outline"}
             onClick={() => setSelectedSide("heads")}
             className={`h-12 text-sm font-semibold transition-all ${selectedSide === "heads"
-                ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
-                : "border-gold text-gold hover:bg-gold/10"
+              ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
+              : "border-gold text-gold hover:bg-gold/10"
               }`}
             disabled={isFlipping}
           >
@@ -118,8 +120,8 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
             variant={selectedSide === "tails" ? "default" : "outline"}
             onClick={() => setSelectedSide("tails")}
             className={`h-12 text-sm font-semibold transition-all ${selectedSide === "tails"
-                ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
-                : "border-gold text-gold hover:bg-gold/10"
+              ? "bg-gold-gradient text-white shadow-lg shadow-gold/25"
+              : "border-gold text-gold hover:bg-gold/10"
               }`}
             disabled={isFlipping}
           >
@@ -241,8 +243,8 @@ export function GameInterface({ isWalletConnected, selectedNetwork, balance, set
         {gameResult && (
           <div
             className={`p-3 rounded-lg text-center font-bold text-sm border-2 ${gameResult === "win"
-                ? "bg-green-500/20 text-green-500 border-green-500/30"
-                : "bg-red-500/20 text-red-500 border-red-500/30"
+              ? "bg-green-500/20 text-green-500 border-green-500/30"
+              : "bg-red-500/20 text-red-500 border-red-500/30"
               }`}
           >
             {gameResult === "win" ? "🎉 GOLDEN WIN! 🎉" : "😔 Try Again"}

@@ -1,17 +1,29 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Wallet, ChevronDown, Coins, TrendingUp, Trophy, Info, MessageCircle, Sun, Moon } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
 import { setBalance } from "@/utils/setBalance"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
+
+import { useChainId } from 'wagmi'
+import { Chain, lisk, celo, liskSepolia, celoAlfajores } from 'wagmi/chains'
+
+const chainMap: Record<number, Chain> = {
+  [lisk.id]: lisk,
+  [celo.id]: celo,
+  [liskSepolia.id]: liskSepolia,
+  [celoAlfajores.id]: celoAlfajores,
+}
+
 
 interface HeaderProps {
   isWalletConnected: boolean
   setIsWalletConnected: (connected: boolean) => void
   selectedNetwork: string
   setSelectedNetwork: (network: string) => void
+  setChainID: (chainID: number) => void
   balance: string
   activeTab: string
   setActiveTab: (tab: string) => void
@@ -23,18 +35,18 @@ interface HeaderProps {
 const networks = [
   { id: "celo", name: "CELO", color: "text-yellow-600", symbol: "CELO", chainId: 42220 },
   { id: "lisk", name: "LISK", color: "text-gray-500", symbol: "LSK", chainId: 1135 },
-]
-
-const walletOptions = [
-  { name: "MetaMask", icon: "🦊" },
-  { name: "OKX", icon: "⛌" },
-]
+],
+  walletOptions = [
+    { name: "MetaMask", icon: "🦊" },
+    { name: "OKX", icon: "⛌" },
+  ]
 
 export function Header({
   isWalletConnected,
   setIsWalletConnected,
   selectedNetwork,
   setSelectedNetwork,
+  setChainID,
   balance,
   activeTab,
   setActiveTab,
@@ -42,26 +54,33 @@ export function Header({
   setWalletAddress,
   setIsCommentsSidebarOpen,
 }: HeaderProps) {
-  const [showWalletOptions, setShowWalletOptions] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const
+    // 
+    [showWalletOptions, setShowWalletOptions] = useState(false),
+    { theme, setTheme } = useTheme(),
+    connectWallet = (walletType: string) => {
+      setIsWalletConnected(true)
+      setWalletAddress("0x1234...5678")
+      const network = networks.find((n) => n.id === selectedNetwork)
+      setBalance(network?.symbol === "ETH" ? "2.45" : network?.symbol === "BNB" ? "15.8" : "1250.00")
+      setShowWalletOptions(false)
+    },
+    tabs = [
+      { id: "game", label: "Game", icon: Coins },
+      { id: "history", label: "History", icon: TrendingUp },
+      { id: "leaderboard", label: "Leaderboard", icon: Trophy },
+      { id: "about", label: "About", icon: Info },
+    ],
+    selectedNetworkData = networks.find((n) => n.id === selectedNetwork),
+    chainId = useChainId(),
+    chain = chainMap[chainId]
 
-  const connectWallet = (walletType: string) => {
-    setIsWalletConnected(true)
-    setWalletAddress("0x1234...5678")
-    const network = networks.find((n) => n.id === selectedNetwork)
-    setBalance(network?.symbol === "ETH" ? "2.45" : network?.symbol === "BNB" ? "15.8" : "1250.00")
-    setShowWalletOptions(false)
-  }
+    ;
 
-  const tabs = [
-    { id: "game", label: "Game", icon: Coins },
-    { id: "history", label: "History", icon: TrendingUp },
-    { id: "leaderboard", label: "Leaderboard", icon: Trophy },
-    { id: "about", label: "About", icon: Info },
-  ]
-
-  const selectedNetworkData = networks.find((n) => n.id === selectedNetwork)
-
+  useEffect(() => {
+    setChainID(chainId)
+    setSelectedNetwork(chain?.name)
+  }, [chainId])
   return (
     <header className="border-b border-gold bg-card/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
@@ -71,7 +90,7 @@ export function Header({
               <div className="w-8 h-8 bg-gold-gradient rounded-full flex items-center justify-center animate-pulse-gold">
                 <Coins className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gold-gradient">Golden Flip</span>
+              <span className="text-2xl font-bold text-gold-gradient">Heads Up</span>
             </div>
 
             {/* Comments Toggle Button */}
@@ -115,26 +134,6 @@ export function Header({
               {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </Button>
 
-            <Select value={selectedNetwork} onValueChange={setSelectedNetwork}>
-              <SelectTrigger className="w-44 bg-card/50 border-gold text-foreground">
-                <div className="flex items-center space-x-2">
-                  <span className={selectedNetworkData?.color}>●</span>
-                  <span>{selectedNetworkData?.name}</span>
-                </div>
-              </SelectTrigger>
-              <SelectContent className="bg-card border border-gold">
-                {networks.map((network) => (
-                  <SelectItem key={network.id} value={network.id} className="text-foreground hover:bg-muted">
-                    <div className="flex items-center space-x-2">
-                      <span className={network.color}>●</span>
-                      <span>{network.name}</span>
-                      <span className="text-xs text-muted-foreground">({network.symbol})</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
             {isWalletConnected ? (
               <div className="flex items-center space-x-3 bg-card/50 border border-gold rounded-lg px-4 py-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -156,14 +155,14 @@ export function Header({
               </div>
             ) : (
               <div className="relative">
-                <Button
-                  onClick={() => setShowWalletOptions(!showWalletOptions)}
-                  className="bg-gold-gradient hover:opacity-90 text-white font-semibold px-6 py-2 rounded-lg shadow-lg shadow-gold/25"
+                <div
+                  // onClick={() => setShowWalletOptions(!showWalletOptions)}
+                  className="bg-gold-gradient text-white font-semibold rounded-lg w-fit p-1 flex items-center pl-2"
                 >
                   <Wallet className="w-4 h-4 mr-2" />
-                  Connect Wallet
-                  <ChevronDown className="w-4 h-4 ml-2" />
-                </Button>
+                  <ConnectButton />
+                  {/* <ChevronDown className="w-4 h-4 ml-2" /> */}
+                </div>
 
                 {showWalletOptions && (
                   <div className="absolute top-full right-0 mt-2 w-56 bg-card border border-gold rounded-lg shadow-xl z-50">
